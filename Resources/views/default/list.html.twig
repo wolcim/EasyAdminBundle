@@ -79,7 +79,7 @@
                         {% set _action = easyadmin_get_action_for_list_view('new', _entity_config.name) %}
                         {% block new_action %}
                             <div class="button-action">
-                                <a class="{{ _action.css_class|default('') }}" href="{{ path('easyadmin', _request_parameters|merge({ action: _action.name })) }}" target="{{ _action.target }}">
+                                <a data-easyadmin-confirm="{{ _action.confirm|default('') }}" class="{{ _action.css_class|default('') }}" href="{{ path('easyadmin', _request_parameters|merge({ action: _action.name })) }}" target="{{ _action.target }}">
                                     {% if _action.icon %}<i class="fa fa-{{ _action.icon }}"></i>{% endif %}
                                     {{ _action.label is defined and not _action.label is empty ? _action.label|trans(_trans_parameters) }}
                                 </a>
@@ -240,4 +240,48 @@
             $('#main').find('table tbody').highlight($.merge([_search_query], _search_query.split(' ')));
         </script>
     {% endif %}
+
+    <script type="text/javascript">
+        /*
+         * Based on 'confirmModal' by Maxime AILLOUD
+         * https://github.com/mailloud/confirm-bootstrap
+         */
+        (function($) {
+            $.fn.confirmModal = function(confirmMessage, index) {
+                var modalId = 'easyAdminConfirmModal' + Date.now() + index;
+
+                $('body').append('<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog"> \
+                      <div class="modal-dialog" role="document"> \
+                        <div class="modal-content"> \
+                          <div class="modal-body">' + confirmMessage + '</div> \
+                          <div class="modal-footer"> \
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> \
+                            <button type="button" class="btn btn-primary" data-dismiss="ok">Continue</button> \
+                          </div> \
+                        </div> \
+                      </div> \
+                    </div>'
+                );
+
+                var confirmModal = $('#' + modalId);
+                $(this).on('click', function(modalEvent) {
+                    modalEvent.preventDefault();
+                    confirmModal.modal('show');
+                    var target = $(this).attr('href');
+
+                    $('button[data-dismiss="ok"]', confirmModal).on('click', function(event) {
+                        confirmModal.modal('hide');
+                        window.location = target;
+                    });
+                });
+            };
+        })(jQuery);
+
+        $(function() {
+            $('body').find('[data-easyadmin-confirm]').each(function(index) {
+                $(this).confirmModal($(this).data('easyadmin-confirm'), index);
+            });
+        });
+
+    </script>
 {% endblock %}

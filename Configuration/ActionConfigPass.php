@@ -33,6 +33,7 @@ class ActionConfigPass implements ConfigPassInterface
         'icon' => null,
         // the value of the HTML 'target' attribute add to the links of the actions (e.g. '_blank')
         'target' => '_self',
+        'confirm' => null,
     );
 
     public function process(array $backendConfig)
