@@ -34,8 +34,14 @@
     {% set _menu_items = easyadmin_config('design.menu') %}
 
     {% block main_menu %}
+
+    {% for role in app.user.roles %}{# user abfrage#}
+
         {% for item in _menu_items %}
             {% block menu_item %}
+
+             {% if role in item.require_permission|default([]) %} {# perm abfrage#}
+
                 <li class="{{ item.type == 'divider' ? 'header' }} {{ item.children is not empty ? 'treeview' }} {{ app.request.query.get('menuIndex')|default(-1) == loop.index0 ? 'active' }} {{ app.request.query.get('submenuIndex')|default(-1) != -1 ? 'submenu-active' }}">
                     {{ helper.render_menu_item(item, _entity_config.translation_domain|default('messages')) }}
 
@@ -52,6 +58,8 @@
                     {% endif %}
                 </li>
             {% endblock menu_item %}
+    {% endif %}
+                {% endfor %}
         {% endfor %}
     {% endblock main_menu %}
 </ul>
