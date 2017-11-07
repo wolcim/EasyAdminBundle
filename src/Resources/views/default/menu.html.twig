@@ -38,6 +38,7 @@
     {% for role in app.user.roles %}{# user abfrage#}
 
         {% for item in _menu_items %}
+
             {% block menu_item %}
 
              {% if role in item.require_permission|default([]) %} {# perm abfrage#}
@@ -56,10 +57,9 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                </li>
+                </li>   {% endif %}
             {% endblock menu_item %}
-    {% endif %}
-                {% endfor %}
+        {% endfor %}
         {% endfor %}
     {% endblock main_menu %}
 </ul>

@@ -1,5 +1,6 @@
 EasyAdmin
 =========
+add
 
 EasyAdmin creates administration backends for your Symfony applications with
 unprecedented simplicity.
